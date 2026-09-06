@@ -14,7 +14,7 @@ export default {
 		}
 
 		// JOIN GAME
-		if (request.method = "POST"){
+		if (request.method == "POST"){
 			const isApiGameJoin = url.pathname.match(/^\/api\/([^/]+)\/join$/)
 			if (isApiGameJoin){
 				const gameId = match[1]
