@@ -13,19 +13,28 @@ export function handleLobbyRequest (request, env) {
 
     // JOIN GAME
     if (request.method == "POST"){
-        const isApiGameJoin = url.pathname.match(/^\/lobby\/([^/]+)\/join$/)
-        if (isApiGameJoin){
-            const gameId = isApiGameJoin[1]
+        const match = url.pathname.match(/^\/lobby\/([^/]+)\/join$/)
+        if (match){
+            const gameId = match[1]
             return joinGame(request, env, gameId)
         }
     }
 
     // GET SPECIFIC LOBBY GAME
     if (request.method == "GET"){
-        const isApiGameGet = url.pathname.match(/^\/lobby\/games\/([^/]+)$/)
-        if (isApiGameGet){
-            const gameId = isApiGameGet[1]
+        const match = url.pathname.match(/^\/lobby\/games\/([^/]+)$/)
+        if (match){
+            const gameId = match[1]
             return getGame(env, gameId)
+        }
+    }
+
+    // DELETE A SPECIFIC GAME
+    if (request.method == "DELETE"){
+        const match = url.pathname.match(/^\/lobby\/games\/([^/]+)$/)
+        if (match){
+            const gameId = match[1]
+            return deleteGame(env, gameId)
         }
     }
 }
@@ -84,6 +93,18 @@ async function getGame(env, gameId){
     } else {
         return Response.json(game)
     }
+}
+
+async function deleteGame(env, gameId){
+    await env.DB_LOBBY
+        .prepare(`
+            DELETE FROM games WHERE id = ?
+        `)
+        .bind(gameId)
+        .run()
+    return Response.json({
+        success: true
+    })
 }
 
 async function joinGame(request, env, gameId){
