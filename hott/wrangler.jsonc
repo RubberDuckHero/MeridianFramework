@@ -6,4 +6,5 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "meridianframework",
 	"main": "src/index.js",
+	"compatibility_date": "2026-09-03",
 }
