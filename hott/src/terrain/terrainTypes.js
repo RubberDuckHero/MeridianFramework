@@ -125,12 +125,14 @@ function generateCentralBadFeature(){
     x = clamp(
         x,
         width / 2,
-        CONFIG.tableSize - width / 2
+        CONFIG.tableSize - width / 2,
+        2
     )
     y = clamp(
         y,
         height / 2,
-        CONFIG.tableSize - height / 2
+        CONFIG.tableSize - height / 2,
+        2
     )
 
     return createFeature(
@@ -154,9 +156,12 @@ function randomChoice(array){
     return array[Math.floor(Math.random() * array.length)]
 }
 
-function clamp(value, min, max) {
-    return Math.max(
+function clamp(value, min, max, scale = -1) {
+    const clamped = Math.max(
         min,
         Math.min(max, value)
     )
+    if (scale === -1) return clamped
+    const factor = 10 ** scale
+    return Math.round(clamped * factor) / factor
 }
