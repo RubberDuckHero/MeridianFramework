@@ -97,23 +97,27 @@ function generateCentralBadFeature(){
             definition.minWidth,
             CONFIG.minimumCentralBadDiameter
         ),
-        definition.maxWidth
+        definition.maxWidth,
+        2
     )
     const height = randomBetween(
         Math.max(
             definition.minHeight,
             CONFIG.minimumCentralBadDiameter
         ),
-        definition.maxHeight
+        definition.maxHeight,
+        2
     )
 
     const angle = randomBetween(
         0,
-        Math.PI * 2
+        Math.PI * 2,
+        2
     )
     const distanceFromCenter = randomBetween(
         1.5,
-        7
+        7,
+        2
     )
 
     let x = 12 + Math.cos(angle) * distanceFromCenter
@@ -135,12 +139,15 @@ function generateCentralBadFeature(){
         y,
         width,
         height,
-        randomBetween(0,180)
+        randomBetween(0,180,2)
     )
 }
 
-function randomBetween(min, max) {
-    return min + Math.random() * (max - min)
+function randomBetween(min, max, scale = -1) {
+    const value = min + Math.random() * (max - min)
+    if (scale === -1) return value
+    const factor = 10 ** scale
+    return Math.round(value * factor) / factor
 }
 
 function randomChoice(array){
