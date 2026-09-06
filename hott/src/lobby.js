@@ -1,4 +1,6 @@
 export function handleLobbyRequest (request, env) {
+    const url = new URL(request.url)
+    
     // FETCH LOBBY
     if (request.method == "GET" && url.pathname == "/lobby/games"){
         return this.getGames(env)
