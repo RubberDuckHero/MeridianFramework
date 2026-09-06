@@ -3,6 +3,10 @@ export default {
 	async fetch (request) {
 		const url = new URL(request.url)
 
+		if (request.method == "GET" && url.pathname == "/api/games"){
+			return this.getGames(request)
+		}
+
 		if (request.method == "GET" && url.pathname == "/api/hello") {
 			const name = url.searchParams.get("name") ?? "World"
 
@@ -13,6 +17,17 @@ export default {
 
 		return new Response("Not Found", {
 			status: 404,
+		})
+	},
+
+	// POST	/games
+	// GET	/games
+	// GET	/games/:gameId
+	// POST /games/:gameId/join
+
+	getGames(request){
+		return Response.json({
+			game: JSON.stringify(request)
 		})
 	}
 
