@@ -21,6 +21,12 @@ const TERRAIN_TYPES = {
         maxWidth: 7,
         minHeight: 2.5,
         maxHeight: 5,
+
+        shape: {
+            points: 12,
+            irregularityMin: 0.88,
+            irregularityMax: 1.08
+        }
     },
 
     woods: {
@@ -30,6 +36,12 @@ const TERRAIN_TYPES = {
         maxWidth: 5,
         minHeight: 2,
         maxHeight: 4.5,
+
+        shape: {
+            points: 12,
+            irregularityMin: 0.72,
+            irregularityMax: 1.18
+        }
     },
 
     field: {
@@ -39,6 +51,12 @@ const TERRAIN_TYPES = {
         maxWidth: 5,
         minHeight: 2,
         maxHeight: 4.5,
+
+        shape: {
+            points: 6,
+            irregularityMin: 0.90,
+            irregularityMax: 1.05
+        }
     },
 
     rocks: {
@@ -48,8 +66,13 @@ const TERRAIN_TYPES = {
         maxWidth: 4,
         minHeight: 2,
         maxHeight: 4,
-    }
 
+        shape: {
+            points: 7,
+            irregularityMin: 0.65,
+            irregularityMax: 1.15
+        }
+    }
 }
 
 export function generateBattlefield() {
@@ -103,19 +126,15 @@ function addFeatureWithoutOverlap(
     return null
 }
 
-function createFeature(type, x, y, width, height, rotation = 0){
+function createFeature(
+    type,
+    x,
+    y,
+    width,
+    height,
+    rotation = 0
+) {
     const definition = TERRAIN_TYPES[type]
-    let numPoints = 10
-    if (type === "rocks") numPoints = 7
-    if (type === "field") numPoints = 4
-    const points = generateIrregularShape(
-        x,
-        y,
-        width,
-        height,
-        rotation,
-        numPoints
-    )
 
     return {
         id: crypto.randomUUID(),
@@ -126,7 +145,15 @@ function createFeature(type, x, y, width, height, rotation = 0){
         width,
         height,
         rotation,
-        points
+
+        points: generateIrregularShape(
+            x,
+            y,
+            width,
+            height,
+            rotation,
+            definition.shape
+        )
     }
 }
 
@@ -135,31 +162,49 @@ function generateIrregularShape(
     centerY,
     width,
     height,
-    rotation = 0,
-    pointCount = 10
+    rotation,
+    {
+        points = 10,
+        irregularityMin = 0.8,
+        irregularityMax = 1.15
+    } = {}
 ) {
-    const points = []
+    const result = []
 
-    const rotationRadians = rotation * Math.PI / 180
+    const rotationRadians =
+        rotation * Math.PI / 180
 
-    for (let i = 0; i < pointCount; i++) {
+    for (let i = 0; i < points; i++) {
+        // Adding a little angular jitter makes it less obviously radial.
+        const baseAngle =
+            (i / points) * Math.PI * 2
+
+        const angleStep =
+            (Math.PI * 2) / points
+
         const angle =
-            (i / pointCount) * Math.PI * 2
+            baseAngle +
+            randomBetween(
+                -angleStep * 0.2,
+                angleStep * 0.2
+            )
 
-        // Randomly push each point inward/outward.
-        // Keep the range fairly restrained or you'll get crazy shapes.
-        const irregularity = randomBetween(0.75, 1.15)
+        const irregularity =
+            randomBetween(
+                irregularityMin,
+                irregularityMax
+            )
 
-        const radiusX =
-            (width / 2) * irregularity
+        const localX =
+            Math.cos(angle) *
+            (width / 2) *
+            irregularity
 
-        const radiusY =
-            (height / 2) * irregularity
+        const localY =
+            Math.sin(angle) *
+            (height / 2) *
+            irregularity
 
-        let localX = Math.cos(angle) * radiusX
-        let localY = Math.sin(angle) * radiusY
-
-        // Rotate the point.
         const rotatedX =
             localX * Math.cos(rotationRadians) -
             localY * Math.sin(rotationRadians)
@@ -168,13 +213,13 @@ function generateIrregularShape(
             localX * Math.sin(rotationRadians) +
             localY * Math.cos(rotationRadians)
 
-        points.push({
+        result.push({
             x: centerX + rotatedX,
             y: centerY + rotatedY
         })
     }
 
-    return points
+    return result
 }
 
 function generateCentralBadFeature(){
@@ -204,7 +249,7 @@ function generateCentralBadFeature(){
     )
     const distanceFromCenter = randomBetween(
         1.5,
-        7,
+        CONFIG.centralZoneRadius,
         2
     )
 
@@ -343,4 +388,20 @@ function canPlaceFeature(feature, battlefield) {
     }
 
     return true
+}
+
+function featuresTooClose(a, b, clearance = 0.5) {
+    const dx = a.x - b.x
+    const dy = a.y - b.y
+
+    const distance = Math.hypot(dx, dy)
+
+    const radiusA =
+        Math.max(a.width, a.height) / 2
+
+    const radiusB =
+        Math.max(b.width, b.height) / 2
+
+    return distance <
+        radiusA + radiusB + clearance
 }
