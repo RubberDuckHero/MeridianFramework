@@ -22,6 +22,15 @@ export default {
 			}
 		}
 
+		// GET SPECIFIC LOBBY GAME
+		if (request.method == "GET"){
+			const isApiGameGet = url.pathname.match(/^\/api\/games\/([^/]+)$/)
+			if (isApiGameGet){
+				const gameId = isApiGameGet[1]
+				return this.getGame(env, gameId)
+			}
+		}
+
 		if (request.method == "GET" && url.pathname == "/api/hello") {
 			const name = url.searchParams.get("name") ?? "World"
 
