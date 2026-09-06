@@ -61,8 +61,19 @@ export function generateBattlefield() {
             features: []
         }
 
-        battlefield.features.push(generateCentralBadFeature())
-        battlefield.features.push(generateCentralBadFeature())
+        const first = addFeatureWithoutOverlap(
+            battlefield,
+            generateCentralBadFeature
+        )
+
+        const second = addFeatureWithoutOverlap(
+            battlefield,
+            generateCentralBadFeature
+        )
+
+        if (!first || !second) {
+            continue
+        }
 
         if (validateBattlefield(battlefield)){
             return battlefield
@@ -75,9 +86,26 @@ function validateBattlefield(battlefield){
     return true
 }
 
+function addFeatureWithoutOverlap(
+    battlefield,
+    generator,
+    attempts = 100
+) {
+    for (let attempt = 0; attempt < attempts; attempt++) {
+        const feature = generator()
+
+        if (canPlaceFeature(feature, battlefield)) {
+            battlefield.features.push(feature)
+            return feature
+        }
+    }
+
+    return null
+}
+
 function createFeature(type, x, y, width, height, rotation = 0){
     const definition = TERRAIN_TYPES[type]
-    let numPoints = 100
+    let numPoints = 10
     if (type === "rocks") numPoints = 7
     if (type === "field") numPoints = 4
     const points = generateIrregularShape(
@@ -224,4 +252,95 @@ function clamp(value, min, max, scale = -1) {
     if (scale === -1) return clamped
     const factor = 10 ** scale
     return Math.round(clamped * factor) / factor
+}
+
+function polygonsOverlap(a, b) {
+    // Check edge intersections.
+    for (let i = 0; i < a.length; i++) {
+        const a1 = a[i]
+        const a2 = a[(i + 1) % a.length]
+
+        for (let j = 0; j < b.length; j++) {
+            const b1 = b[j]
+            const b2 = b[(j + 1) % b.length]
+
+            if (segmentsIntersect(a1, a2, b1, b2)) {
+                return true
+            }
+        }
+    }
+
+    // One polygon might be completely inside the other.
+    if (pointInPolygon(a[0], b)) {
+        return true
+    }
+
+    if (pointInPolygon(b[0], a)) {
+        return true
+    }
+
+    return false
+}
+
+function segmentsIntersect(a, b, c, d) {
+    const orientation = (p, q, r) => {
+        return (
+            (q.y - p.y) * (r.x - q.x) -
+            (q.x - p.x) * (r.y - q.y)
+        )
+    }
+
+    const o1 = orientation(a, b, c)
+    const o2 = orientation(a, b, d)
+    const o3 = orientation(c, d, a)
+    const o4 = orientation(c, d, b)
+
+    return (
+        ((o1 > 0 && o2 < 0) || (o1 < 0 && o2 > 0)) &&
+        ((o3 > 0 && o4 < 0) || (o3 < 0 && o4 > 0))
+    )
+}
+
+function pointInPolygon(point, polygon) {
+    let inside = false
+
+    for (
+        let i = 0, j = polygon.length - 1;
+        i < polygon.length;
+        j = i++
+    ) {
+        const a = polygon[i]
+        const b = polygon[j]
+
+        const intersects =
+            ((a.y > point.y) !== (b.y > point.y)) &&
+            (
+                point.x <
+                ((b.x - a.x) *
+                    (point.y - a.y)) /
+                    (b.y - a.y) +
+                    a.x
+            )
+
+        if (intersects) {
+            inside = !inside
+        }
+    }
+
+    return inside
+}
+
+function canPlaceFeature(feature, battlefield) {
+    for (const existing of battlefield.features) {
+        if (
+            polygonsOverlap(
+                feature.points,
+                existing.points
+            )
+        ) {
+            return false
+        }
+    }
+
+    return true
 }
