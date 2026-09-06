@@ -33,7 +33,7 @@ export default {
 		const gameId = crypto.randomUUID()
 		await env.DB_LOBBY
 			.prepare(`
-				INSERT INTO games (id, player1, player2, status, create_at)
+				INSERT INTO games (id, player1, player2, status, created_at)
 				VALUES (?, ?, NULL, 'WAITING', ?)
 			`)
 			.bind(gameId, 'Apple', Date.now())
