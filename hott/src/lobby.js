@@ -51,7 +51,7 @@ async function postGame(request, env){
         player2: null,
         status: "WAITING"
     })
-},
+}
 
 async function getGames(env){
     const result = await env.DB_LOBBY
@@ -63,7 +63,7 @@ async function getGames(env){
     return Response.json({
         games: result.results
     })
-},
+}
 
 async function getGame(env, gameId){
     const game = await env.DB_LOBBY
@@ -82,7 +82,7 @@ async function getGame(env, gameId){
     } else {
         return Response.json(game)
     }
-},
+}
 
 async function joinGame(request, env, gameId){
     const url = new URL(request.url)
