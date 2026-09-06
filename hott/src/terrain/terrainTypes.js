@@ -405,6 +405,9 @@ function pointInPolygon(point, polygon) {
 
 function canPlaceFeature(feature, battlefield) {
     for (const existing of battlefield.features) {
+        if (featuresTooClose(feature, existing, 0.5)) {
+            return false
+        }
         if (
             polygonsOverlap(
                 feature.points,
