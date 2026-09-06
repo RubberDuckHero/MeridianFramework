@@ -13,7 +13,7 @@ export function handleLobbyRequest (request, env) {
 
     // JOIN GAME
     if (request.method == "POST"){
-        const match = url.pathname.match(/^\/lobby\/([^/]+)\/join$/)
+        const match = url.pathname.match(/^\/lobby\/games\/([^/]+)$/)
         if (match){
             const gameId = match[1]
             return joinGame(request, env, gameId)
