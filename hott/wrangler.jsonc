@@ -14,5 +14,12 @@
 			"database_name": "Meridian_Lobby",
 			"database_id": "b99f163a-1543-4f33-83b6-89bdfbd8fe00"
 		}
-	]
+	],
+
+	"observability": {
+		"logs": {
+		"enabled": false,
+		"invocation_logs": true
+		}
+	}
 }
