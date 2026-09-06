@@ -120,7 +120,7 @@ function generateIrregularShape(
 
         // Randomly push each point inward/outward.
         // Keep the range fairly restrained or you'll get crazy shapes.
-        const irregularity = randomBetween(0.75, 1.15, 4)
+        const irregularity = randomBetween(0.75, 1.15)
 
         const radiusX =
             (width / 2) * irregularity
