@@ -7,6 +7,10 @@ export default {
 			return this.getGames(request)
 		}
 
+		if (request.method == "POST" && url.pathname == "/api/games"){
+			return this.postGame(request)
+		}
+
 		if (request.method == "GET" && url.pathname == "/api/hello") {
 			const name = url.searchParams.get("name") ?? "World"
 
@@ -25,12 +29,19 @@ export default {
 	// GET	/games/:gameId
 	// POST /games/:gameId/join
 
+	postGame(request){
+		const gameId = crypto.randomUUID()
+		return Response.json({
+			game: 123
+		})
+	},
+
 	getGames(request){
 		const url = new URL(request.url)
 		return Response.json({
 			game: 123,
 			url: url.pathname
 		})
-	}
+	},
 
 }
