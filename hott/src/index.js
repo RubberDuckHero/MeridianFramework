@@ -29,7 +29,7 @@ export default {
 	// GET	/games/:gameId
 	// POST /games/:gameId/join
 
-	async postGame(resuest, env){
+	async postGame(request, env){
 		const url = new URL(request.url)
 		const playerName = url.searchParams.get("name")
 		if (playerName == null){
