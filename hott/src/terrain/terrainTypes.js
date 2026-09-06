@@ -77,7 +77,7 @@ function validateBattlefield(battlefield){
 
 function createFeature(type, x, y, width, height, rotation = 0){
     const definition = TERRAIN_TYPES[type]
-    let numPoints = 10
+    let numPoints = 100
     if (type === "rocks") numPoints = 7
     if (type === "field") numPoints = 4
     const points = generateIrregularShape(
