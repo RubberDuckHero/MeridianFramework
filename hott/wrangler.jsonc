@@ -7,4 +7,12 @@
 	"name": "meridianframework",
 	"main": "src/index.js",
 	"compatibility_date": "2026-09-03",
+
+	"d1_databases": [
+		{
+			"binding": "DB_LOBBY",
+			"database_name": "Meridian_Lobby",
+			"database_id": "b99f163a-1543-4f33-83b6-89bdfbd8fe00"
+		}
+	]
 }

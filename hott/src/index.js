@@ -1,14 +1,14 @@
 export default {
 
-	async fetch (request) {
+	async fetch (request, env) {
 		const url = new URL(request.url)
 
 		if (request.method == "GET" && url.pathname == "/api/games"){
-			return this.getGames(request)
+			return this.getGames(request, env)
 		}
 
 		if (request.method == "POST" && url.pathname == "/api/games"){
-			return this.postGame(request)
+			return this.postGame(request, env)
 		}
 
 		if (request.method == "GET" && url.pathname == "/api/hello") {
@@ -29,18 +29,23 @@ export default {
 	// GET	/games/:gameId
 	// POST /games/:gameId/join
 
-	postGame(request){
+	postGame(request, env){
 		const gameId = crypto.randomUUID()
 		return Response.json({
 			game: 123
 		})
 	},
 
-	getGames(request){
-		const url = new URL(request.url)
+	async getGames(request, env){
+		const gamesList = await env.DB_LOBBY
+			.prepare(`
+				SELECT id, player1, player2, status, created_at
+				FROM games
+				WHERE status = 'WAITING'
+			`).all()
 		return Response.json({
 			game: 123,
-			url: url.pathname
+			games: gamesList.results
 		})
 	},
 
