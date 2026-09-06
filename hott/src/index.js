@@ -77,6 +77,25 @@ export default {
 		})
 	},
 
+	async getGame(env, gameId){
+		const game = await env.DB_LOBBY
+			.prepare(`
+				SELECT id, player1, player2, status, created_at
+				FROM games
+				WHERE id = ?
+			`)
+			.bind(gameId)
+			.first()
+		if (!game){
+			return Response.json({
+				error: "Game not found",
+				status: 404
+			})
+		} else {
+			return Response.json(game)
+		}
+	},
+
 	async joinGame(request, env, gameId){
 		const url = new URL(request.url)
 		const playerName = url.searchParams.get("name")
@@ -99,7 +118,7 @@ export default {
 				
 		if (result.meta.changes === 0){
 			return Response.json({
-				error: "Game is no longer available",
+				error: "Game is not available",
 				status: 409
 			})
 		} else {
