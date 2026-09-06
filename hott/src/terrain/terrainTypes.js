@@ -77,6 +77,18 @@ function validateBattlefield(battlefield){
 
 function createFeature(type, x, y, width, height, rotation = 0){
     const definition = TERRAIN_TYPES[type]
+    let numPoints = 10
+    if (type === "rocks") numPoints = 7
+    if (type === "field") numPoints = 4
+    const points = generateIrregularShape(
+        x,
+        y,
+        width,
+        height,
+        rotation,
+        numPoints
+    )
+
     return {
         id: crypto.randomUUID(),
         type,
@@ -85,8 +97,56 @@ function createFeature(type, x, y, width, height, rotation = 0){
         y,
         width,
         height,
-        rotation
+        rotation,
+        points
     }
+}
+
+function generateIrregularShape(
+    centerX,
+    centerY,
+    width,
+    height,
+    rotation = 0,
+    pointCount = 10
+) {
+    const points = []
+
+    const rotationRadians = rotation * Math.PI / 180
+
+    for (let i = 0; i < pointCount; i++) {
+        const angle =
+            (i / pointCount) * Math.PI * 2
+
+        // Randomly push each point inward/outward.
+        // Keep the range fairly restrained or you'll get crazy shapes.
+        const irregularity = randomBetween(0.75, 1.15, 4)
+
+        const radiusX =
+            (width / 2) * irregularity
+
+        const radiusY =
+            (height / 2) * irregularity
+
+        let localX = Math.cos(angle) * radiusX
+        let localY = Math.sin(angle) * radiusY
+
+        // Rotate the point.
+        const rotatedX =
+            localX * Math.cos(rotationRadians) -
+            localY * Math.sin(rotationRadians)
+
+        const rotatedY =
+            localX * Math.sin(rotationRadians) +
+            localY * Math.cos(rotationRadians)
+
+        points.push({
+            x: centerX + rotatedX,
+            y: centerY + rotatedY
+        })
+    }
+
+    return points
 }
 
 function generateCentralBadFeature(){
