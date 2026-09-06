@@ -405,7 +405,7 @@ function pointInPolygon(point, polygon) {
 
 function canPlaceFeature(feature, battlefield) {
     for (const existing of battlefield.features) {
-        if (featuresTooClose(feature, existing, 0.5)) {
+        if (featuresTooClose(feature, existing, 2)) {
             return false
         }
         if (
