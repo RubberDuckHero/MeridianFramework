@@ -1,39 +1,34 @@
+/*
+GET     /lobby/list            See games waiting for players
+POST    /lobby/list            Create a new game
+GET     /lobby/game/:gameId    Get the details of a specific game (this is polled by the host)
+POST    /lobby/game/:gameId    Join a specific game
+DELETE  /lobby/game/:gameId    Delete a specific game
+*/
+
 export function handleLobbyRequest (request, env) {
     const url = new URL(request.url)
-    
-    // FETCH LOBBY
-    if (request.method == "GET" && url.pathname == "/lobby/games"){
-        return getGames(env)
+    const urlSplit = url.pathname.split('/')
+    if (urlSplit[1] != "lobby"){
+        return new Response("Internal Server Error", {
+            status: 500
+        })
     }
+    const path = urlSplit[2]
 
-    // CREATE GAME
-    if (request.method == "POST" && url.pathname == "/lobby/games"){
-        return postGame(request, env)
-    }
-
-    // JOIN GAME
-    if (request.method == "POST"){
-        const match = url.pathname.match(/^\/lobby\/games\/([^/]+)$/)
-        if (match){
-            const gameId = match[1]
-            return joinGame(request, env, gameId)
+    if (path == "list"){
+        if (request.method == "GET"){
+            return getGames(env)
+        } else if (request.method == "POST"){
+            return postGame(request, env)
         }
-    }
-
-    // GET SPECIFIC LOBBY GAME
-    if (request.method == "GET"){
-        const match = url.pathname.match(/^\/lobby\/games\/([^/]+)$/)
-        if (match){
-            const gameId = match[1]
+    } else if (path == "game"){
+        const gameId = urlSplit[3]
+        if (request.method == "GET"){
             return getGame(env, gameId)
-        }
-    }
-
-    // DELETE A SPECIFIC GAME
-    if (request.method == "DELETE"){
-        const match = url.pathname.match(/^\/lobby\/games\/([^/]+)$/)
-        if (match){
-            const gameId = match[1]
+        } else if (request.method == "POST"){
+            return joinGame(request, env, gameId)
+        } else if (request.method == "DELETE"){
             return deleteGame(env, gameId)
         }
     }
