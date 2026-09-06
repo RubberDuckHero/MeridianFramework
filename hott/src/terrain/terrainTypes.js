@@ -53,7 +53,7 @@ const TERRAIN_TYPES = {
         maxHeight: 4.5,
 
         shape: {
-            points: 6,
+            points: -1,
             irregularityMin: 0.90,
             irregularityMax: 1.05
         }
@@ -169,13 +169,41 @@ function generateIrregularShape(
         irregularityMax = 1.15
     } = {}
 ) {
-    const result = []
-
     const rotationRadians =
         rotation * Math.PI / 180
 
+    // Special case: rectangle
+    if (points === -1) {
+        const halfWidth = width / 2
+        const halfHeight = height / 2
+
+        const corners = [
+            { x: -halfWidth, y: -halfHeight },
+            { x:  halfWidth, y: -halfHeight },
+            { x:  halfWidth, y:  halfHeight },
+            { x: -halfWidth, y:  halfHeight }
+        ]
+
+        return corners.map(point => {
+            const rotatedX =
+                point.x * Math.cos(rotationRadians) -
+                point.y * Math.sin(rotationRadians)
+
+            const rotatedY =
+                point.x * Math.sin(rotationRadians) +
+                point.y * Math.cos(rotationRadians)
+
+            return {
+                x: centerX + rotatedX,
+                y: centerY + rotatedY
+            }
+        })
+    }
+
+    // Irregular shape
+    const result = []
+
     for (let i = 0; i < points; i++) {
-        // Adding a little angular jitter makes it less obviously radial.
         const baseAngle =
             (i / points) * Math.PI * 2
 
