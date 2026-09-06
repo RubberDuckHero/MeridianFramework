@@ -36,7 +36,7 @@ export default {
 				INSERT INTO games (id, player1, player2, status, create_at)
 				VALUES (?, ?, NULL, 'WAITING', ?)
 			`)
-			.bind(gameId, playerName, Date.now())
+			.bind(gameId, 'Apple', Date.now())
 			.run()
 		return Response.json({
 			gameId: gameId
