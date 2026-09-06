@@ -3,12 +3,23 @@ export default {
 	async fetch (request, env) {
 		const url = new URL(request.url)
 
+		// FETCH LOBBY
 		if (request.method == "GET" && url.pathname == "/api/games"){
 			return this.getGames(env)
 		}
 
+		// CREATE GAME
 		if (request.method == "POST" && url.pathname == "/api/games"){
 			return this.postGame(request, env)
+		}
+
+		// JOIN GAME
+		if (request.method = "POST"){
+			const isApiGameJoin = url.pathname.match(/^\/api\/([^/]+)\/join$/)
+			if (isApiGameJoin){
+				const gameId = match[1]
+				return this.joinGame(request, env, gameId)
+			}
 		}
 
 		if (request.method == "GET" && url.pathname == "/api/hello") {
@@ -47,20 +58,55 @@ export default {
 			.bind(gameId, playerName, Date.now())
 			.run()
 		return Response.json({
-			gameId: gameId
+			gameId,
+			player1: playerName,
+			player2: null,
+			status: "WAITING"
 		})
 	},
 
 	async getGames(env){
-		const gamesList = await env.DB_LOBBY
+		const result = await env.DB_LOBBY
 			.prepare(`
 				SELECT id, player1, player2, status, created_at
 				FROM games
 				WHERE status = 'WAITING'
 			`).all()
 		return Response.json({
-			games: gamesList.results
+			games: result.results
 		})
 	},
+
+	async joinGame(request, env, gameId){
+		const url = new URL(request.url)
+		const playerName = url.searchParams.get("name")
+		if (playerName == null){
+			return new Response("No Player Name", {
+				status: 400
+			})
+		}
+
+		const result = await env.DB_LOBBY
+			.prepare(`
+				UPDATE games
+				SET player2 = ?, status = 'READY'
+				WHERE id = ?
+					AND player2 IS NULL
+					AND status = 'WAITING'
+			`)
+			.bind(playerName, gameId)
+			.run()
+				
+		if (result.meta.changes === 0){
+			return Response.json({
+				error: "Game is no longer available",
+				status: 409
+			})
+		} else {
+			return Response.json({
+				gameId
+			})
+		}
+	}
 
 }
