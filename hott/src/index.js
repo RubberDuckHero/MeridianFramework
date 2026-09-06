@@ -33,7 +33,7 @@ export default {
 		const url = new URL(request.url)
 		const playerName = url.searchParams.get("name")
 		if (playerName == null){
-			return Response("No Player Name", {
+			return new Response("No Player Name", {
 				status: 400
 			})
 		}
