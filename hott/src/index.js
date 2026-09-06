@@ -26,8 +26,10 @@ export default {
 	// POST /games/:gameId/join
 
 	getGames(request){
+		const url = new URL(request.url)
 		return Response.json({
-			game: JSON.stringify(request)
+			game: 123,
+			url: url.pathname
 		})
 	}
 
