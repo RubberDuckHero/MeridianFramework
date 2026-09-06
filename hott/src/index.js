@@ -8,7 +8,7 @@ export default {
 		}
 
 		if (request.method == "POST" && url.pathname == "/api/games"){
-			return this.postGame(env)
+			return this.postGame(request, env)
 		}
 
 		if (request.method == "GET" && url.pathname == "/api/hello") {
@@ -29,14 +29,22 @@ export default {
 	// GET	/games/:gameId
 	// POST /games/:gameId/join
 
-	async postGame(env){
+	async postGame(resuest, env){
+		const url = new URL(request.url)
+		const playerName = url.searchParams.get("name")
+		if (playerName == null){
+			return Response("No Player Name", {
+				status: 400
+			})
+		}
+
 		const gameId = crypto.randomUUID()
 		await env.DB_LOBBY
 			.prepare(`
 				INSERT INTO games (id, player1, player2, status, created_at)
 				VALUES (?, ?, NULL, 'WAITING', ?)
 			`)
-			.bind(gameId, 'Apple', Date.now())
+			.bind(gameId, playerName, Date.now())
 			.run()
 		return Response.json({
 			gameId: gameId
@@ -51,7 +59,6 @@ export default {
 				WHERE status = 'WAITING'
 			`).all()
 		return Response.json({
-			game: 123,
 			games: gamesList.results
 		})
 	},
