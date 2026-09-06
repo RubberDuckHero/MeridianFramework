@@ -5,7 +5,7 @@ export default {
 	async fetch (request, env) {
 		const url = new URL(request.url)
 		if (url.pathname.split('/')[0] == "lobby"){
-			handleLobbyRequest(request, env);
+			return handleLobbyRequest(request, env);
 		}
 
 		// // FETCH LOBBY
