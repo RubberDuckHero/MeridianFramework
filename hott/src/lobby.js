@@ -3,12 +3,12 @@ export function handleLobbyRequest (request, env) {
     
     // FETCH LOBBY
     if (request.method == "GET" && url.pathname == "/lobby/games"){
-        return this.getGames(env)
+        return getGames(env)
     }
 
     // CREATE GAME
     if (request.method == "POST" && url.pathname == "/lobby/games"){
-        return this.postGame(request, env)
+        return postGame(request, env)
     }
 
     // JOIN GAME
@@ -16,7 +16,7 @@ export function handleLobbyRequest (request, env) {
         const isApiGameJoin = url.pathname.match(/^\/lobby\/([^/]+)\/join$/)
         if (isApiGameJoin){
             const gameId = isApiGameJoin[1]
-            return this.joinGame(request, env, gameId)
+            return joinGame(request, env, gameId)
         }
     }
 
@@ -25,7 +25,7 @@ export function handleLobbyRequest (request, env) {
         const isApiGameGet = url.pathname.match(/^\/lobby\/games\/([^/]+)$/)
         if (isApiGameGet){
             const gameId = isApiGameGet[1]
-            return this.getGame(env, gameId)
+            return getGame(env, gameId)
         }
     }
 }
