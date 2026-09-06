@@ -4,11 +4,11 @@ export default {
 		const url = new URL(request.url)
 
 		if (request.method == "GET" && url.pathname == "/api/games"){
-			return this.getGames(request, env)
+			return this.getGames(env)
 		}
 
 		if (request.method == "POST" && url.pathname == "/api/games"){
-			return this.postGame(request, env)
+			return this.postGame(env)
 		}
 
 		if (request.method == "GET" && url.pathname == "/api/hello") {
@@ -29,14 +29,21 @@ export default {
 	// GET	/games/:gameId
 	// POST /games/:gameId/join
 
-	postGame(request, env){
+	async postGame(env){
 		const gameId = crypto.randomUUID()
+		await env.DB_LOBBY
+			.prepare(`
+				INSERT INTO games (id, player1, player2, status, create_at)
+				VALUES (?, ?, NULL, 'WAITING', ?)
+			`)
+			.bind(gameId, playerName, Date.now())
+			.run()
 		return Response.json({
-			game: 123
+			gameId: gameId
 		})
 	},
 
-	async getGames(request, env){
+	async getGames(env){
 		const gamesList = await env.DB_LOBBY
 			.prepare(`
 				SELECT id, player1, player2, status, created_at
