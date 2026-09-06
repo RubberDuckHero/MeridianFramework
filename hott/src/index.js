@@ -1,43 +1,40 @@
+import {handleLobbyRequest} from "./lobby.js"
+
 export default {
 
 	async fetch (request, env) {
 		const url = new URL(request.url)
-
-		// FETCH LOBBY
-		if (request.method == "GET" && url.pathname == "/api/games"){
-			return this.getGames(env)
+		if (url.pathname.split('/')[0] == "lobby"){
+			handleLobbyRequest(request, env);
 		}
 
-		// CREATE GAME
-		if (request.method == "POST" && url.pathname == "/api/games"){
-			return this.postGame(request, env)
-		}
+		// // FETCH LOBBY
+		// if (request.method == "GET" && url.pathname == "/lobby/games"){
+		// 	return this.getGames(env)
+		// }
 
-		// JOIN GAME
-		if (request.method == "POST"){
-			const isApiGameJoin = url.pathname.match(/^\/api\/([^/]+)\/join$/)
-			if (isApiGameJoin){
-				const gameId = isApiGameJoin[1]
-				return this.joinGame(request, env, gameId)
-			}
-		}
+		// // CREATE GAME
+		// if (request.method == "POST" && url.pathname == "/lobby/games"){
+		// 	return this.postGame(request, env)
+		// }
 
-		// GET SPECIFIC LOBBY GAME
-		if (request.method == "GET"){
-			const isApiGameGet = url.pathname.match(/^\/api\/games\/([^/]+)$/)
-			if (isApiGameGet){
-				const gameId = isApiGameGet[1]
-				return this.getGame(env, gameId)
-			}
-		}
+		// // JOIN GAME
+		// if (request.method == "POST"){
+		// 	const isApiGameJoin = url.pathname.match(/^\/lobby\/([^/]+)\/join$/)
+		// 	if (isApiGameJoin){
+		// 		const gameId = isApiGameJoin[1]
+		// 		return this.joinGame(request, env, gameId)
+		// 	}
+		// }
 
-		if (request.method == "GET" && url.pathname == "/api/hello") {
-			const name = url.searchParams.get("name") ?? "World"
-
-			return Response.json({
-				message: `Hello ${name}`,
-			})
-		}
+		// // GET SPECIFIC LOBBY GAME
+		// if (request.method == "GET"){
+		// 	const isApiGameGet = url.pathname.match(/^\/lobby\/games\/([^/]+)$/)
+		// 	if (isApiGameGet){
+		// 		const gameId = isApiGameGet[1]
+		// 		return this.getGame(env, gameId)
+		// 	}
+		// }
 
 		return new Response("Not Found", {
 			status: 404,
