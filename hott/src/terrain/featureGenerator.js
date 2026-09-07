@@ -1,6 +1,6 @@
 import { CONFIG } from "./config.js";
 import { TERRAIN_TYPES } from "./terrain.js";
-import { generateShape } from "./shape-generator.js";
+import { generateShape } from "./shapeGenerator.js";
 import {
   randomBetween,
   randomChoice,

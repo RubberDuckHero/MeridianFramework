@@ -3,7 +3,7 @@ import {
   generateCentralBadFeature,
   generateRandomFeature,
   generateRoad,
-} from "./feature-generator.js";
+} from "./featureGenerator.js";
 import { canPlaceFeature } from "./placement.js";
 import { randomBetween } from "./random.js";
 
