@@ -152,3 +152,19 @@ function pointToSegmentDistance(point, a, b) {
         point.y - closestY
     )
 }
+
+export function polygonArea(points) {
+  let area = 0;
+
+  for (let i = 0; i < points.length; i++) {
+    const current = points[i];
+    const next =
+      points[(i + 1) % points.length];
+
+    area +=
+      current.x * next.y -
+      next.x * current.y;
+  }
+
+  return Math.abs(area) / 2;
+}

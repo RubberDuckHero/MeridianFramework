@@ -9,6 +9,7 @@ import {
     addFeatureWithoutOverlap 
 } from "./placement.js";
 import { randomInt } from "./random.js";
+import { polygonArea } from "./geometry.js";
 
 export function generateBattlefield(){
   for (let attempt = 0;
@@ -195,21 +196,4 @@ function getOccupiedQuarters(features) {
   }
 
   return quarters;
-}
-
-
-function polygonArea(points) {
-  let area = 0;
-
-  for (let i = 0; i < points.length; i++) {
-    const current = points[i];
-    const next =
-      points[(i + 1) % points.length];
-
-    area +=
-      current.x * next.y -
-      next.x * current.y;
-  }
-
-  return Math.abs(area) / 2;
 }
