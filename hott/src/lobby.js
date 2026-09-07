@@ -6,7 +6,7 @@ POST    /lobby/game/:gameId    Join a specific game
 DELETE  /lobby/game/:gameId    Delete a specific game
 */
 
-export function handleLobbyRequest (request, env) {
+export function handleLobbyRequest (request, env){
     const url = new URL(request.url)
     const urlSplit = url.pathname.split('/')
     if (urlSplit[1] != "lobby"){
