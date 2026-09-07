@@ -1,10 +1,13 @@
 import { CONFIG } from "./config.js";
 import {
-  generateCentralBadFeature,
-  generateRandomFeature,
-  generateRoad,
+    generateCentralBadFeature,
+    generateRandomFeature,
+    generateRoad,
 } from "./featureGenerator.js";
-import { canPlaceFeature } from "./placement.js";
+import { 
+    canPlaceFeature, 
+    addFeatureWithoutOverlap 
+} from "./placement.js";
 import { randomBetween } from "./random.js";
 
 export function generateBattlefield(){
