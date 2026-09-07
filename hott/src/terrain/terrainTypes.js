@@ -54,8 +54,6 @@ const TERRAIN_TYPES = {
 
         shape: {
             points: -1,
-            irregularityMin: 0.90,
-            irregularityMax: 1.05
         }
     },
 
@@ -72,7 +70,33 @@ const TERRAIN_TYPES = {
             irregularityMin: 0.65,
             irregularityMax: 1.15
         }
-    }
+    },
+
+    roadNS: {
+        name: "Road",
+        terrainClass: "road",
+        minWidth: 1,
+        maxWidth: 1.5,
+        minHeight: CONFIG.tableSize,
+        maxHeight: CONFIG.tableSize,
+
+        shape: {
+            points: -1,
+        }
+    },
+
+    roadEW: {
+        name: "Road",
+        terrainClass: "road",
+        minWidth: CONFIG.tableSize,
+        maxWidth: CONFIG.tableSize,
+        minHeight: 1,
+        maxHeight: 1.5,
+
+        shape: {
+            points: -1,
+        }
+    },
 }
 
 export function generateBattlefield() {
@@ -93,6 +117,20 @@ export function generateBattlefield() {
             battlefield,
             generateCentralBadFeature
         )
+
+        const roadRoll = randomBetween(0, 10, 0)
+        if (roadRoll === 0){
+            addFeatureWithoutOverlap(
+                battlefield,
+                generateRoadNS
+            )
+        }
+        if (roadRoll === 1){
+            addFeatureWithoutOverlap(
+                battlefield,
+                generateRoadEW
+            )
+        }
 
         if (!first || !second) {
             continue
@@ -314,9 +352,24 @@ function generateCentralBadFeature(){
     )
 }
 
-function generateRandomFeature() {
+function generateRandomFeature(){
     const type = randomChoice(["woods", "field", "hill", "rocks"])
     const definition = TERRAIN_TYPES[type]
+    return generateFeature(type, definition)
+}
+
+function generateRoadNS(){
+    const type = "RoadNS"
+    const definition = TERRAIN_TYPES[type]
+    return generateFeature(type, definition)
+}
+function generateRoadEW(){
+    const type = "RoadEW"
+    const definition = TERRAIN_TYPES[type]
+    return generateFeature(type, definition)
+}
+
+function generateFeature(type, definition){}
     const width = randomBetween(
         definition.minWidth,
         definition.maxWidth,
