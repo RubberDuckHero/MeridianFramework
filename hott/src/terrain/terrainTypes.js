@@ -97,7 +97,7 @@ export function generateBattlefield() {
         }
 
         const roadRoll = randomInt(0, 100)
-        if (roadRoll < 100){
+        if (roadRoll < 40){
             battlefield.features.push(generateRoad())
         }
 
