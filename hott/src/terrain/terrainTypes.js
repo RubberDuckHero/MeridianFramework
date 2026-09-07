@@ -375,11 +375,11 @@ function generateRoad(type, definition){
         definition.maxHeight,
         2
     )
-    const x = definition.shape.linear == 'y' ? CONFIG.tableSize/2 : randomBetween(
+    const x = definition.shape.linear == 'x' ? CONFIG.tableSize/2 : randomBetween(
         width / 2,
         CONFIG.tableSize - width / 2
     )
-    const y =  definition.shape.linear == 'x' ? CONFIG.tableSize/2 : randomBetween(
+    const y =  definition.shape.linear == 'y' ? CONFIG.tableSize/2 : randomBetween(
         height / 2,
         CONFIG.tableSize - height / 2
     )
