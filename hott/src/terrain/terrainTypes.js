@@ -499,12 +499,19 @@ function pointInPolygon(point, polygon) {
     return inside
 }
 
-function canPlaceFeature(feature, battlefield) {
+function canPlaceFeature(
+    feature,
+    battlefield,
+    clearance = 0.5
+) {
     for (const existing of battlefield.features) {
-        if (featuresTooClose(feature, existing, 2)) {
-            return false
-        }
-        if (polygonsOverlap(feature.points, existing.points)) {
+        if (
+            featuresTooClose(
+                feature,
+                existing,
+                clearance
+            )
+        ) {
             return false
         }
     }
@@ -513,17 +520,94 @@ function canPlaceFeature(feature, battlefield) {
 }
 
 function featuresTooClose(a, b, clearance = 0.5) {
-    const dx = a.x - b.x
-    const dy = a.y - b.y
+    // If they actually overlap, they're definitely too close.
+    if (polygonsOverlap(a.points, b.points)) {
+        return true
+    }
 
-    const distance = Math.hypot(dx, dy)
+    const distance = polygonDistance(
+        a.points,
+        b.points
+    )
 
-    const radiusA =
-        Math.max(a.width, a.height) / 2
+    return distance < clearance
+}
 
-    const radiusB =
-        Math.max(b.width, b.height) / 2
+function polygonDistance(a, b) {
+    let minimumDistance = Infinity
 
-    return distance <
-        radiusA + radiusB + clearance
+    for (let i = 0; i < a.length; i++) {
+        const a1 = a[i]
+        const a2 = a[(i + 1) % a.length]
+
+        for (let j = 0; j < b.length; j++) {
+            const b1 = b[j]
+            const b2 = b[(j + 1) % b.length]
+
+            const distance = segmentDistance(
+                a1,
+                a2,
+                b1,
+                b2
+            )
+
+            minimumDistance = Math.min(
+                minimumDistance,
+                distance
+            )
+        }
+    }
+
+    return minimumDistance
+}
+
+function segmentDistance(a1, a2, b1, b2) {
+    if (segmentsIntersect(a1, a2, b1, b2)) {
+        return 0
+    }
+
+    return Math.min(
+        pointToSegmentDistance(a1, b1, b2),
+        pointToSegmentDistance(a2, b1, b2),
+        pointToSegmentDistance(b1, a1, a2),
+        pointToSegmentDistance(b2, a1, a2)
+    )
+}
+
+function pointToSegmentDistance(point, a, b) {
+    const dx = b.x - a.x
+    const dy = b.y - a.y
+
+    const lengthSquared =
+        dx * dx +
+        dy * dy
+
+    if (lengthSquared === 0) {
+        return Math.hypot(
+            point.x - a.x,
+            point.y - a.y
+        )
+    }
+
+    let t =
+        (
+            (point.x - a.x) * dx +
+            (point.y - a.y) * dy
+        ) / lengthSquared
+
+    t = Math.max(
+        0,
+        Math.min(1, t)
+    )
+
+    const closestX =
+        a.x + t * dx
+
+    const closestY =
+        a.y + t * dy
+
+    return Math.hypot(
+        point.x - closestX,
+        point.y - closestY
+    )
 }
