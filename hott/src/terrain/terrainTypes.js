@@ -346,7 +346,7 @@ function generateRoad(){
         definition.maxWidth,
         2
     )
-    const height = CONFIG.tableSize
+    const height = CONFIG.tableSize * 2
     const x = randomBetween(
         width / 2,
         CONFIG.tableSize - width / 2
