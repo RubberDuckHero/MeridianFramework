@@ -124,16 +124,18 @@ export function generateBattlefield() {
 
         const roadRoll = randomInt(0, 10)
         if (roadRoll === 0){
-            addFeatureWithoutOverlap(
-                battlefield,
-                generateRoadNS
-            )
+            battlefield.features.push(generateRoadNS())
+            // addFeatureWithoutOverlap(
+            //     battlefield,
+            //     generateRoadNS
+            // )
         }
         if (roadRoll === 1){
-            addFeatureWithoutOverlap(
-                battlefield,
-                generateRoadEW
-            )
+            battlefield.features.push(generateRoadEW())
+            // addFeatureWithoutOverlap(
+            //     battlefield,
+            //     generateRoadEW
+            // )
         }
 
         // const extraFeatureCount = randomInt(CONFIG.extraFeatureCount.min, CONFIG.extraFeatureCount.max)
