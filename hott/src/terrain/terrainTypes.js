@@ -13,7 +13,7 @@ const CONFIG = {
     maxGenerationAttempts: 1000
 }
 
-const TERRAIN_TYPES = {
+let TERRAIN_TYPES = {
     hill: {
         name: "Hill",
         terrainClass: "good",
