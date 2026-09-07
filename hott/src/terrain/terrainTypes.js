@@ -13,7 +13,7 @@ const CONFIG = {
     maxGenerationAttempts: 1000
 }
 
-let TERRAIN_TYPES = {
+const TERRAIN_TYPES = {
     hill: {
         name: "Hill",
         terrainClass: "good",
@@ -97,7 +97,7 @@ export function generateBattlefield() {
         }
 
         const roadRoll = randomInt(0, 100)
-        if (roadRoll < 10){
+        if (roadRoll < 100){
             battlefield.features.push(generateRoad())
         }
 
