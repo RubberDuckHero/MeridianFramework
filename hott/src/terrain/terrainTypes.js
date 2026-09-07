@@ -76,9 +76,9 @@ let TERRAIN_TYPES = {
         name: "Road",
         terrainClass: "road",
         minWidth: 1,
-        maxWidth: 1.5,
-        minHeight: CONFIG.tableSize,
-        maxHeight: CONFIG.tableSize+1,
+        maxWidth: 1.1,
+        minHeight: CONFIG.tableSize-10,
+        maxHeight: CONFIG.tableSize+10,
 
         shape: {
             points: -1,
@@ -88,10 +88,10 @@ let TERRAIN_TYPES = {
     roadEW: {
         name: "Road",
         terrainClass: "road",
-        minWidth: CONFIG.tableSize,
-        maxWidth: CONFIG.tableSize+1,
+        minWidth: CONFIG.tableSize-10,
+        maxWidth: CONFIG.tableSize+10,
         minHeight: 1,
-        maxHeight: 1.5,
+        maxHeight: 1.1,
 
         shape: {
             points: -1,
@@ -123,7 +123,6 @@ export function generateBattlefield() {
         }
 
         const roadRoll = randomInt(0, 10)
-        //battlefield.features.push(generateRoadNS())
         if (roadRoll == 0){
             addFeatureWithoutOverlap(
                 battlefield,
@@ -137,13 +136,13 @@ export function generateBattlefield() {
             )
         }
 
-        // const extraFeatureCount = randomInt(CONFIG.extraFeatureCount.min, CONFIG.extraFeatureCount.max)
-        // for (let i = 0; i < extraFeatureCount; i++){
-        //     addFeatureWithoutOverlap(
-        //         battlefield,
-        //         generateRandomFeature
-        //     )
-        // }
+        const extraFeatureCount = randomInt(CONFIG.extraFeatureCount.min, CONFIG.extraFeatureCount.max)
+        for (let i = 0; i < extraFeatureCount; i++){
+            addFeatureWithoutOverlap(
+                battlefield,
+                generateRandomFeature
+            )
+        }
 
         if (validateBattlefield(battlefield)){
             return battlefield
