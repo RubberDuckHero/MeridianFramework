@@ -72,33 +72,19 @@ let TERRAIN_TYPES = {
         }
     },
 
-    roadNS: {
+    road: {
         name: "Road",
         terrainClass: "road",
         minWidth: 1,
-        maxWidth: 1.1,
-        minHeight: CONFIG.tableSize+10,
-        maxHeight: CONFIG.tableSize+11,
+        maxWidth: 1,
+        minHeight: 0,
+        maxHeight: 0,
 
         shape: {
             points: -1,
-            linear: 'y',
         }
     },
 
-    roadEW: {
-        name: "Road",
-        terrainClass: "road",
-        minWidth: CONFIG.tableSize+10,
-        maxWidth: CONFIG.tableSize+11,
-        minHeight: 1,
-        maxHeight: 1.1,
-
-        shape: {
-            points: -1,
-            linear: 'x',
-        }
-    },
 }
 
 export function generateBattlefield() {
@@ -112,9 +98,7 @@ export function generateBattlefield() {
 
         const roadRoll = randomInt(0, 100)
         if (roadRoll < 10){
-            battlefield.features.push(generateRoadNS())
-        } else if (roadRoll < 20){
-            battlefield.features.push(generateRoadEW())
+            battlefield.features.push(generateRoad())
         }
 
         const first = addFeatureWithoutOverlap(
@@ -353,35 +337,23 @@ function generateRandomFeature(){
     return generateFeature(type, definition)
 }
 
-function generateRoadNS(){
-    const type = "roadNS"
+function generateRoad(){
+    const type = "road"
     const definition = TERRAIN_TYPES[type]
-    return generateRoad(type, definition)
-}
-function generateRoadEW(){
-    const type = "roadEW"
-    const definition = TERRAIN_TYPES[type]
-    return generateRoad(type, definition)
-}
-
-function generateRoad(type, definition){
-    const width = definition.shape.linear == 'x' ? CONFIG.tableSize : randomBetween(
+    
+    const width = randomBetween(
         definition.minWidth,
         definition.maxWidth,
         2
     )
-    const height = definition.shape.linear == 'y' ? CONFIG.tableSize : randomBetween(
-        definition.minHeight,
-        definition.maxHeight,
-        2
-    )
-    const x = definition.shape.linear == 'x' ? CONFIG.tableSize/2 : randomBetween(
+    const height = CONFIG.tableSize
+    const x = randomBetween(
         width / 2,
         CONFIG.tableSize - width / 2
     )
-    const y =  definition.shape.linear == 'y' ? CONFIG.tableSize/2 : randomBetween(
-        height / 2,
-        CONFIG.tableSize - height / 2
+    const y =  randomBetween(
+        width / 2,
+        CONFIG.tableSize - width / 2
     )
 
     return createFeature(
@@ -390,7 +362,7 @@ function generateRoad(type, definition){
         y,
         width,
         height,
-        0
+        randomBetween(0, 180, 2)
     )
 }
 
