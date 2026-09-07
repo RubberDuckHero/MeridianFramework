@@ -99,6 +99,12 @@ export function generateBattlefield() {
         }
 
         const extraFeatureCount = randomBetween(CONFIG.extraFeatureCount.min, CONFIG.extraFeatureCount.max, 0)
+        for (let i = 0; i < extraFeatureCount; i++){
+            addFeatureWithoutOverlap(
+                battlefield,
+                generateRandomFeature
+            )
+        }
 
         if (validateBattlefield(battlefield)){
             return battlefield
