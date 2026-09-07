@@ -356,12 +356,42 @@ function generateRandomFeature(){
 function generateRoadNS(){
     const type = "roadNS"
     const definition = TERRAIN_TYPES[type]
-    return generateFeature(type, definition)
+    return generateRoad(type, definition)
 }
 function generateRoadEW(){
     const type = "roadEW"
     const definition = TERRAIN_TYPES[type]
-    return generateFeature(type, definition)
+    return generateRoad(type, definition)
+}
+
+function generateRoad(type, definition){
+    const width = definition.shape.linear == 'x' ? CONFIG.tableSize : randomBetween(
+        definition.minWidth,
+        definition.maxWidth,
+        2
+    )
+    const height = definition.shape.linear == 'y' ? CONFIG.tableSize : randomBetween(
+        definition.minHeight,
+        definition.maxHeight,
+        2
+    )
+    const x = definition.shape.linear == 'y' ? CONFIG.tableSize/2 : randomBetween(
+        width / 2,
+        CONFIG.tableSize - width / 2
+    )
+    const y =  definition.shape.linear == 'x' ? CONFIG.tableSize/2 : randomBetween(
+        height / 2,
+        CONFIG.tableSize - height / 2
+    )
+
+    return createFeature(
+        type,
+        x,
+        y,
+        width,
+        height,
+        0
+    )
 }
 
 function generateFeature(type, definition){
@@ -375,11 +405,11 @@ function generateFeature(type, definition){
         definition.maxHeight,
         2
     )
-    const x = definition.shape.linear == 'y' ? CONFIG.tableSize / 2 : randomBetween(
+    const x = randomBetween(
         width / 2,
         CONFIG.tableSize - width / 2
     )
-    const y = definition.shape.linear == 'x' ? CONFIG.tableSize / 2 : randomBetween(
+    const y = randomBetween(
         height / 2,
         CONFIG.tableSize - height / 2
     )
