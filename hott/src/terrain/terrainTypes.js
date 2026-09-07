@@ -77,8 +77,8 @@ let TERRAIN_TYPES = {
         terrainClass: "road",
         minWidth: 1,
         maxWidth: 1.1,
-        minHeight: CONFIG.tableSize-10,
-        maxHeight: CONFIG.tableSize+10,
+        minHeight: CONFIG.tableSize+10,
+        maxHeight: CONFIG.tableSize+11,
 
         shape: {
             points: -1,
@@ -88,8 +88,8 @@ let TERRAIN_TYPES = {
     roadEW: {
         name: "Road",
         terrainClass: "road",
-        minWidth: CONFIG.tableSize-10,
-        maxWidth: CONFIG.tableSize+10,
+        minWidth: CONFIG.tableSize+10,
+        maxWidth: CONFIG.tableSize+11,
         minHeight: 1,
         maxHeight: 1.1,
 
