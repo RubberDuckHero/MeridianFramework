@@ -125,18 +125,22 @@ export function generateBattlefield() {
         }
 
         const roadRoll = randomInt(0, 10)
-        if (roadRoll == 0){
-            addFeatureWithoutOverlap(
-                battlefield,
-                generateRoadNS
-            )
-        }
-        if (roadRoll == 1){
-            addFeatureWithoutOverlap(
-                battlefield,
-                generateRoadEW
-            )
-        }
+        addFeatureWithoutOverlap(
+            battlefield,
+            generateRoadNS
+        )
+        // if (roadRoll == 0){
+        //     addFeatureWithoutOverlap(
+        //         battlefield,
+        //         generateRoadNS
+        //     )
+        // }
+        // if (roadRoll == 1){
+        //     addFeatureWithoutOverlap(
+        //         battlefield,
+        //         generateRoadEW
+        //     )
+        // }
 
         const extraFeatureCount = randomInt(CONFIG.extraFeatureCount.min, CONFIG.extraFeatureCount.max)
         for (let i = 0; i < extraFeatureCount; i++){
