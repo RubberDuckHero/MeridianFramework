@@ -82,6 +82,7 @@ let TERRAIN_TYPES = {
 
         shape: {
             points: -1,
+            linear: 'y',
         }
     },
 
@@ -95,6 +96,7 @@ let TERRAIN_TYPES = {
 
         shape: {
             points: -1,
+            linear: 'x',
         }
     },
 }
@@ -380,11 +382,11 @@ function generateFeature(type, definition){
         definition.maxHeight,
         2
     )
-     const x = randomBetween(
+    const x = definition.shape.linear == 'y' ? CONFIG.tableSize / 2 : randomBetween(
         width / 2,
         CONFIG.tableSize - width / 2
     )
-    const y = randomBetween(
+    const y = definition.shape.linear == 'x' ? CONFIG.tableSize / 2 : randomBetween(
         height / 2,
         CONFIG.tableSize - height / 2
     )
