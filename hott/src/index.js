@@ -1,5 +1,5 @@
 import {handleLobbyRequest} from "./lobby.js"
-import { generateBattlefield } from "./terrain/terrainTypes.js";
+import { generateBattlefield } from "./terrain/battlefield.js";
 
 export default {
 
