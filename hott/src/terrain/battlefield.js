@@ -8,7 +8,7 @@ import {
     canPlaceFeature, 
     addFeatureWithoutOverlap 
 } from "./placement.js";
-import { randomBetween } from "./random.js";
+import { randomInt } from "./random.js";
 
 export function generateBattlefield(){
   for (let attempt = 0;
@@ -68,4 +68,18 @@ function addRequiredCentralTerrain(battlefield) {
   }
 
   return true;
+}
+
+function addExtraTerrain(battlefield) {
+  const count = randomInt(
+    CONFIG.generation.extraFeatures.min,
+    CONFIG.generation.extraFeatures.max,
+  );
+
+  for (let i = 0; i < count; i++) {
+    addFeatureWithoutOverlap(
+      battlefield,
+      generateRandomFeature,
+    );
+  }
 }
