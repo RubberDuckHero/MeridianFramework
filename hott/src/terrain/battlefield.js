@@ -83,3 +83,133 @@ function addExtraTerrain(battlefield) {
     );
   }
 }
+
+function validateBattlefield(battlefield) {
+  return (
+    hasEnoughTerrainQuarters(battlefield) &&
+    hasEnoughBadTerrainQuarters(battlefield) &&
+    hasEnoughCentralBadFeatures(battlefield) &&
+    isWithinMaximumTerrainCoverage(battlefield)
+  );
+}
+
+
+function hasEnoughTerrainQuarters(battlefield) {
+  const occupiedQuarters = getOccupiedQuarters(
+    battlefield.features.filter(
+      (feature) => feature.type !== "road",
+    ),
+  );
+
+  return (
+    occupiedQuarters.size >=
+    CONFIG.validation.minimumTerrainQuarters
+  );
+}
+
+
+function hasEnoughBadTerrainQuarters(battlefield) {
+  const badFeatures = battlefield.features.filter(
+    (feature) =>
+      feature.terrainClass === "bad" ||
+      feature.terrainClass === "impassable",
+  );
+
+  const occupiedQuarters =
+    getOccupiedQuarters(badFeatures);
+
+  return (
+    occupiedQuarters.size >=
+    CONFIG.validation.minimumBadQuarters
+  );
+}
+
+
+function hasEnoughCentralBadFeatures(battlefield) {
+  const center = CONFIG.table.size / 2;
+
+  const count = battlefield.features.filter(
+    (feature) => {
+      if (feature.terrainClass !== "bad") {
+        return false;
+      }
+
+      const distance = Math.hypot(
+        feature.x - center,
+        feature.y - center,
+      );
+
+      return (
+        distance <= CONFIG.centralZone.radius
+      );
+    },
+  ).length;
+
+  return (
+    count >=
+    CONFIG.centralZone.minimumBadFeatures
+  );
+}
+
+
+function isWithinMaximumTerrainCoverage(
+  battlefield,
+) {
+  const tableArea =
+    battlefield.width *
+    battlefield.height;
+
+  const terrainArea = battlefield.features
+    .filter((feature) => feature.type !== "road")
+    .reduce(
+      (total, feature) =>
+        total + polygonArea(feature.points),
+      0,
+    );
+
+  return (
+    terrainArea / tableArea <=
+    CONFIG.validation.maximumTerrainCoverage
+  );
+}
+
+
+function getOccupiedQuarters(features) {
+  const center = CONFIG.table.size / 2;
+  const quarters = new Set();
+
+  for (const feature of features) {
+    const horizontal =
+      feature.x < center
+        ? "left"
+        : "right";
+
+    const vertical =
+      feature.y < center
+        ? "top"
+        : "bottom";
+
+    quarters.add(
+      `${vertical}-${horizontal}`,
+    );
+  }
+
+  return quarters;
+}
+
+
+function polygonArea(points) {
+  let area = 0;
+
+  for (let i = 0; i < points.length; i++) {
+    const current = points[i];
+    const next =
+      points[(i + 1) % points.length];
+
+    area +=
+      current.x * next.y -
+      next.x * current.y;
+  }
+
+  return Math.abs(area) / 2;
+}
