@@ -128,7 +128,7 @@ export function generateBattlefield() {
         )
 
         if (!first || !second) {
-            continue
+            //continue
         }
 
         const extraFeatureCount = randomInt(CONFIG.extraFeatureCount.min, CONFIG.extraFeatureCount.max)
