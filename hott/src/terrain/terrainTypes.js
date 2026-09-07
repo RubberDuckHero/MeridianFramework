@@ -359,12 +359,12 @@ function generateRandomFeature(){
 }
 
 function generateRoadNS(){
-    const type = "RoadNS"
+    const type = "roadNS"
     const definition = TERRAIN_TYPES[type]
     return generateFeature(type, definition)
 }
 function generateRoadEW(){
-    const type = "RoadEW"
+    const type = "roadEW"
     const definition = TERRAIN_TYPES[type]
     return generateFeature(type, definition)
 }
