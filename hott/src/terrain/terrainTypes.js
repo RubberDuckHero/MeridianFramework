@@ -369,7 +369,7 @@ function generateRoadEW(){
     return generateFeature(type, definition)
 }
 
-function generateFeature(type, definition){}
+function generateFeature(type, definition){
     const width = randomBetween(
         definition.minWidth,
         definition.maxWidth,
