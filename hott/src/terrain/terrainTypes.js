@@ -118,7 +118,7 @@ export function generateBattlefield() {
             generateCentralBadFeature
         )
 
-        const roadRoll = randomBetween(0, 10, 0)
+        const roadRoll = randomInt(0, 10)
         if (roadRoll === 0){
             addFeatureWithoutOverlap(
                 battlefield,
@@ -136,7 +136,7 @@ export function generateBattlefield() {
             continue
         }
 
-        const extraFeatureCount = randomBetween(CONFIG.extraFeatureCount.min, CONFIG.extraFeatureCount.max, 0)
+        const extraFeatureCount = randomInt(CONFIG.extraFeatureCount.min, CONFIG.extraFeatureCount.max)
         for (let i = 0; i < extraFeatureCount; i++){
             addFeatureWithoutOverlap(
                 battlefield,
@@ -404,6 +404,12 @@ function randomBetween(min, max, scale = -1) {
     if (scale === -1) return value
     const factor = 10 ** scale
     return Math.round(value * factor) / factor
+}
+
+function randomInt(min, max) {
+    return Math.floor(
+        randomBetween(min, max + 1)
+    )
 }
 
 function randomChoice(array){
