@@ -1,56 +1,36 @@
 import {
-  polygonsOverlap,
-  polygonDistance,
-} from "./geometry.js";
+    polygonsOverlap,
+    polygonDistance,
+} from "./geometry.js"
 
-export function addFeatureWithoutOverlap(
-  battlefield,
-  generator,
-  {
-    attempts = 100,
-    clearance = 1,
-  } = {},
-) {
-  for (let attempt = 0; attempt < attempts; attempt++) {
-    const feature = generator();
+export function addFeatureWithoutOverlap(battlefield, generator, {attempts = 100, clearance = 1} = {}){
+    for (let attempt = 0; attempt < attempts; attempt++){
+        const feature = generator()
 
-    if (!canPlaceFeature(feature, battlefield, clearance)) {
-      continue;
+        if (!canPlaceFeature(feature, battlefield, clearance)){
+            continue
+        }
+
+        battlefield.features.push(feature)
+        return feature
     }
 
-    battlefield.features.push(feature);
-    return feature;
-  }
-
-  return null;
+    return null
 }
 
-export function canPlaceFeature(
-  feature,
-  battlefield,
-  clearance = 1,
-) {
-  return battlefield.features.every(
-    (existingFeature) =>
-      !featuresTooClose(
-        feature,
-        existingFeature,
-        clearance,
-      ),
-  );
+export function canPlaceFeature(feature, battlefield, clearance = 1){
+    return battlefield.features.every((existingFeature) => !featuresTooClose(
+            feature,
+            existingFeature,
+            clearance
+        )
+    )
 }
 
-export function featuresTooClose(
-  first,
-  second,
-  clearance = 1,
-) {
-  if (polygonsOverlap(first.points, second.points)) {
-    return true;
-  }
+export function featuresTooClose(first, second, clearance = 1){
+    if (polygonsOverlap(first.points, second.points)){
+        return true
+    }
 
-  return (
-    polygonDistance(first.points, second.points) <
-    clearance
-  );
+    return polygonDistance(first.points, second.points) < clearance
 }
