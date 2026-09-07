@@ -98,6 +98,8 @@ export function generateBattlefield() {
             continue
         }
 
+        const extraFeatureCount = randomBetween(CONFIG.extraFeatureCount.min, CONFIG.extraFeatureCount.max, 0)
+
         if (validateBattlefield(battlefield)){
             return battlefield
         }
@@ -306,6 +308,38 @@ function generateCentralBadFeature(){
     )
 }
 
+function generateRandomFeature() {
+    const type = randomChoice(["woods", "field", "hill", "rocks"])
+    const definition = TERRAIN_TYPES[type]
+    const width = randomBetween(
+        definition.minWidth,
+        definition.maxWidth,
+        2
+    )
+    const height = randomBetween(
+        definition.minHeight,
+        definition.maxHeight,
+        2
+    )
+     const x = randomBetween(
+        width / 2,
+        CONFIG.tableSize - width / 2
+    )
+    const y = randomBetween(
+        height / 2,
+        CONFIG.tableSize - height / 2
+    )
+
+    return createFeature(
+        type,
+        x,
+        y,
+        width,
+        height,
+        randomBetween(0, 180, 2)
+    )
+}
+
 function randomBetween(min, max, scale = -1) {
     const value = min + Math.random() * (max - min)
     if (scale === -1) return value
@@ -408,12 +442,7 @@ function canPlaceFeature(feature, battlefield) {
         if (featuresTooClose(feature, existing, 2)) {
             return false
         }
-        if (
-            polygonsOverlap(
-                feature.points,
-                existing.points
-            )
-        ) {
+        if (polygonsOverlap(feature.points, existing.points)) {
             return false
         }
     }
