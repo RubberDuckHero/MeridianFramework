@@ -1,12 +1,19 @@
-import {handleLobbyRequest} from "./lobby.js"
+import { handleLobbyRequest } from "./lobby.js"
+import { handleArmiesRequest } from "./armies/armies.js"
+
 import { generateBattlefield } from "./terrain/battlefield.js"
 
 export default {
 
 	async fetch (request, env){
 		const url = new URL(request.url)
-		if (url.pathname.split('/')[1] == "lobby"){
+		const pathNameSplit = url.pathname.split('/')
+		if (pathNameSplit[1] == "lobby"){
 			return handleLobbyRequest(request, env)
+		}
+
+		if (pathNameSplit[1] == "armies"){
+			return handleArmiesRequest(request, env)
 		}
 
 		// Testing if nothing else send a new battlefield
