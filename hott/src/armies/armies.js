@@ -48,7 +48,7 @@ function getArmies(){
                         count: 2,
                         description: "Elves with Spears",
                     },{
-                        type: "Shooter",
+                        type: "Shooters",
                         general: false,
                         count: 3,
                         description: "Elves with Bows",
