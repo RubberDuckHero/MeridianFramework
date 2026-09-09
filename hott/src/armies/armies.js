@@ -23,6 +23,7 @@ function getArmies(){
     return Response.json({
         armies: [
             {
+                id: '1',
                 name: "Sindar",
                 description: "1st age Grey Elves from Menegroth",
                 units: [
@@ -54,6 +55,7 @@ function getArmies(){
                     }
                 ]
             },{
+                id: '2',
                 name: "Angband",
                 description: "other armies",
                 units: [
