@@ -4,7 +4,8 @@ import { handleArmiesRequest } from "./armies/armies.js";
 
 import { generateBattlefield } from "./terrain/battlefield.js";
 
-import { createInitialState, dispatchAction } from "./arena/state.js";
+import { createInitialState } from "./arena/state.js";
+import { dispatchAction } from "./arena/actions.js";
 
 const arenaState = createInitialState();
 
